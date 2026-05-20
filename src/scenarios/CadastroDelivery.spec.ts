@@ -10,7 +10,11 @@ test.describe('Practice Software Testing', () => {
   test('Buscar produto', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com');
 
-    await page.getByPlaceholder('Search').fill('Hammer');
+    const searchInput = page.getByPlaceholder('Search');
+
+    await expect(searchInput).toBeVisible();
+
+    await searchInput.fill('Hammer');
 
     await page.keyboard.press('Enter');
 
@@ -28,9 +32,17 @@ test.describe('Practice Software Testing', () => {
   test('Login inválido', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com/auth/login');
 
-    await page.getByPlaceholder('Your email').fill('teste@teste.com');
+    const emailInput = page.getByPlaceholder('Your email');
 
-    await page.getByPlaceholder('Your password').fill('123456');
+    const passwordInput = page.getByPlaceholder('Your password');
+
+    await expect(emailInput).toBeVisible();
+
+    await expect(passwordInput).toBeVisible();
+
+    await emailInput.fill('teste@teste.com');
+
+    await passwordInput.fill('123456');
 
     await page.getByRole('button', { name: 'Login' }).click();
 
@@ -48,17 +60,33 @@ test.describe('Practice Software Testing', () => {
   test('Abrir detalhes de produto', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com');
 
-    await page.getByText('Bolt Cutters').click();
+    const boltCutters = page.getByText('Bolt Cutters');
 
-    await expect(page.locator('body')).toContainText('Add to cart');
+    await expect(boltCutters).toBeVisible();
+
+    await boltCutters.click();
+
+    await expect(
+      page.getByRole('button', { name: /add to cart/i })
+    ).toBeVisible();
   });
 
   test('Adicionar produto ao carrinho', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com');
 
-    await page.locator('[data-test="product-name"]').first().click();
+    const product = page.locator('[data-test="product-name"]').first();
 
-    await page.getByRole('button', { name: /add to cart/i }).click();
+    await expect(product).toBeVisible();
+
+    await product.click();
+
+    const addToCartButton = page.getByRole('button', {
+      name: /add to cart/i
+    });
+
+    await expect(addToCartButton).toBeVisible();
+
+    await addToCartButton.click();
 
     await expect(page.locator('[data-test="cart-quantity"]')).toContainText(
       '1'
@@ -74,13 +102,19 @@ test.describe('Practice Software Testing', () => {
   test('Ordenar produtos por preço', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com');
 
-    await page.selectOption('select', 'price,desc');
+    const sortSelect = page.locator('select');
+
+    await expect(sortSelect).toBeVisible();
+
+    await sortSelect.selectOption('price,desc');
 
     const prices = await page
       .locator('[data-test="product-price"]')
       .allTextContents();
 
-    const numericPrices = prices.map(price => Number(price.replace('$', '')));
+    const numericPrices = prices.map(price =>
+      Number(price.replace('$', '').trim())
+    );
 
     const sortedPrices = [...numericPrices].sort((a, b) => b - a);
 
@@ -90,7 +124,11 @@ test.describe('Practice Software Testing', () => {
   test('Pesquisar produto', async ({ page }) => {
     await page.goto('https://practicesoftwaretesting.com');
 
-    await page.getByPlaceholder('Search').fill('Pliers');
+    const searchInput = page.getByPlaceholder('Search');
+
+    await expect(searchInput).toBeVisible();
+
+    await searchInput.fill('Pliers');
 
     await page.keyboard.press('Enter');
 
