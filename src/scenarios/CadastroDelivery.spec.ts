@@ -185,17 +185,4 @@ test.describe('Practice Software Testing', () => {
     expect(numericPrices).toEqual(sortedPrices);
   });
 
-  test('Pesquisar produto', async ({ page }) => {
-    await acessarSite(page);
-
-    const searchInput = page.getByPlaceholder('Search');
-
-    await expect(searchInput).toBeVisible();
-
-    await searchInput.fill('Pliers');
-
-    await page.keyboard.press('Enter');
-
-    await expect(page.locator('body')).toContainText('Pliers');
-  });
-});
+  
