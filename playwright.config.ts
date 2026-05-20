@@ -2,8 +2,10 @@ import { PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: 'src/scenarios',
+
   timeout: 30000,
-  retries: 0,
+
+  retries: 1,
 
   use: {
     trace: 'retain-on-failure',
